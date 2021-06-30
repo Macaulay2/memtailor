@@ -18,5 +18,4 @@ extern "C" {
 
   extern char MEMTAILOR_VERSION_STRING[];
 }
-#define MEMTAILOR_VERSION VERSION
 #endif
