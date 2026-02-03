@@ -13,36 +13,6 @@ AC_CONFIG_SRCDIR([src/memtailor.h])
 
 AM_PROG_AR
 
-dnl ----- The gtest dependency
-
-AC_ARG_WITH([gtest],
-    [AS_HELP_STRING([--with-gtest],
-        [use gtest, which is required for running the unit tests
-         with make check [default=yes].])],,
-    [with_gtest=yes])
-
-AC_DEFUN([NO_GTEST_ERROR],
-    [AC_MSG_ERROR([gtest not found; try again using --without-gtest])])
-
-AS_IF([test "x$with_gtest" != "xno"],
-     [AC_LANG([C++])
-      AC_CHECK_HEADER([gtest/gtest.h],
-         [AC_MSG_CHECKING([for library containing testing::InitGoogleTest])
-          SAVELIBS=$LIBS
-          LIBS="$LIBS -lgtest -pthread"
-          AC_LINK_IFELSE(
-              [AC_LANG_PROGRAM([
-                  #include <gtest/gtest.h>
-                  ], [
-                  testing::InitGoogleTest()])],
-              [AC_MSG_RESULT([-lgtest])],
-              [AC_MSG_RESULT([no])
-               NO_GTEST_ERROR])
-          LIBS=$SAVELIBS],
-         [NO_GTEST_ERROR])])
-
-AM_CONDITIONAL([with_gtest], [test "x$with_gtest" != "xno"])
-
 # Enable optional maintainer mode (off by default)
 dnl AM_MAINTAINER_MODE turns off automatic reconstruction of the build
 dnl files if the source build files have changed. A developer will want
@@ -93,6 +63,36 @@ dnl Set the version for the library -- this concerns compatibility of the
 dnl source and binary interface of the library and is not the same as the
 dnl version of the project.
 AC_SUBST([MEMTAILOR_SO_VERSION], [0:0:0])
+
+dnl ----- The gtest dependency
+
+AC_ARG_WITH([gtest],
+    [AS_HELP_STRING([--with-gtest],
+        [use gtest, which is required for running the unit tests
+         with make check [default=yes].])],,
+    [with_gtest=yes])
+
+AC_DEFUN([NO_GTEST_ERROR],
+    [AC_MSG_ERROR([gtest not found; try again using --without-gtest])])
+
+AS_IF([test "x$with_gtest" != "xno"],
+     [AC_LANG([C++])
+      AC_CHECK_HEADER([gtest/gtest.h],
+         [AC_MSG_CHECKING([for library containing testing::InitGoogleTest])
+          SAVELIBS=$LIBS
+          LIBS="$LIBS -lgtest -pthread"
+          AC_LINK_IFELSE(
+              [AC_LANG_PROGRAM([
+                  #include <gtest/gtest.h>
+                  ], [
+                  testing::InitGoogleTest()])],
+              [AC_MSG_RESULT([-lgtest])],
+              [AC_MSG_RESULT([no])
+               NO_GTEST_ERROR])
+          LIBS=$SAVELIBS],
+         [NO_GTEST_ERROR])])
+
+AM_CONDITIONAL([with_gtest], [test "x$with_gtest" != "xno"])
 
 dnl Set up AC_OUTPUT to create each file by copying an input file
 dnl while substituting the output variable values.
