@@ -77,6 +77,7 @@ AC_DEFUN([NO_GTEST_ERROR],
 
 AS_IF([test "x$with_gtest" != "xno"],
      [AC_LANG([C++])
+      AX_CXX_COMPILE_STDCXX([17], [], [mandatory])
       AC_CHECK_HEADER([gtest/gtest.h],
          [AC_MSG_CHECKING([for library containing testing::InitGoogleTest])
           SAVELIBS=$LIBS
