@@ -35,4 +35,5 @@ jobs:
                make distcheck
           else cmake -B. -S.. -GNinja
                ninja
+               src/memtailor-unit-tests
           fi
