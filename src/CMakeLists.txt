@@ -2,7 +2,7 @@ if(CMAKE_BUILD_TYPE STREQUAL Debug)
   add_compile_options(-DMEMT_DEBUG)
 endif()
 
-add_library(memtailor STATIC
+add_library(memtailor
   memtailor.h
   memtailor.cpp
   memtailor/Arena.cpp
