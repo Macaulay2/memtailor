@@ -1,6 +1,6 @@
 # Note: also update version in CMakeLists.txt
 dnl AC_INIT sets up autoconf and must be first macro.
-AC_INIT([memtailor], [1.3]) # package, version, bug-report-email
+AC_INIT([memtailor], [1.4]) # package, version, bug-report-email
 
 # set up information about directories
 AC_CONFIG_MACRO_DIR([build/autotools/m4]) # directory of extra autoconf macroes
@@ -62,7 +62,7 @@ LT_INIT([disable-shared])
 dnl Set the version for the library -- this concerns compatibility of the
 dnl source and binary interface of the library and is not the same as the
 dnl version of the project.
-AC_SUBST([MEMTAILOR_SO_VERSION], [0:3:0])
+AC_SUBST([MEMTAILOR_SO_VERSION], [0:4:0])
 
 dnl ----- The gtest dependency
 
