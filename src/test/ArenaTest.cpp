@@ -335,3 +335,19 @@ TEST(Arena, GuardFreesNewerBlocks) {
   ASSERT_EQ(arena.debugAllocCount(), 0u);
 #endif
 }
+
+TEST(Arena, EmptyBlockIsNotKeptBehindFrontBlock) {
+  memt::Arena arena;
+  void* p = arena.alloc(1);
+  void* q = arena.alloc(arena.getMemoryUse() + 1);
+  arena.freeTop(q);
+  void* r = arena.alloc(arena.getMemoryUse() + 1);
+  arena.freeTop(r);
+
+  arena.freeTop(p); // p is in the first block
+  ASSERT_TRUE(arena.isEmpty());
+  ASSERT_EQ(arena.getAllocatedMemoryUse(), 0u);
+#ifdef MEMT_DEBUG
+  ASSERT_EQ(arena.debugAllocCount(), 0u);
+#endif
+}
