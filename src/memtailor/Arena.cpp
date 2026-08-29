@@ -52,6 +52,11 @@ namespace memt {
     MEMT_ASSERT(size >= needed);
     MEMT_ASSERT(size % MemoryAlignment == 0);
     _blocks.allocBlock(size);
+
+    // guardPoint() and freeTopFromOldBlock() both require that a block
+    // behind the front block is not empty.
+    if (block().hasPreviousBlock() && block().previousBlock()->empty())
+      _blocks.freePreviousBlock();
   }
 
   void Arena::freeTopFromOldBlock(void* ptr) {
