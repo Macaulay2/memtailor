@@ -433,15 +433,28 @@ namespace memt {
 	  return;
 	}
 
+	// The blocks allocated since the guard point have to be deallocated,
+	// as guardPoint() and freeTopFromOldBlock() both rely on a block
+	// behind the front block never being empty.
 	Block* b = &block();
-	while (!(b->begin() < ptr && ptr <= b->end())) {
+	if (!(b->begin() < ptr && ptr <= b->end())) {
 	  b->setPosition(b->begin());
-	  b = b->previousBlock();
+	  do {
+		// If you get an assert here then most likely the guard point was
+		// invalidated by deallocating memory that was live at the point
+		// the guard point was created.
+		MEMT_ASSERT(b->hasPreviousBlock());
+		b = b->previousBlock();
+	  } while (!(b->begin() < ptr && ptr <= b->end()));
 
-	  // If you get an assert here then most likely the guard point was
-	  // invalidated by deallocating memory that was live at the point
-	  // the guard point was created.
-	  MEMT_ASSERT(b != 0);
+#ifdef MEMT_DEBUG
+	  // Drop the record of the allocations in the blocks that are about to
+	  // be freed while their addresses are still valid.
+	  while (!_debugAllocs.empty() && !b->isInBlock(_debugAllocs.back()))
+		_debugAllocs.pop_back();
+#endif
+	  while (block().previousBlock() != b)
+		_blocks.freePreviousBlock();
 	}
  	MEMT_ASSERT(b->begin() < ptr && ptr <= b->end());
 	b->setPosition(ptr);
