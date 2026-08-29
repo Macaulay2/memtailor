@@ -306,3 +306,32 @@ TEST(Arena, GuardAfterEmptyRestore) {
 #endif
   memt::Arena::Guard guard2(arena); // must be possible on an empty arena
 }
+
+TEST(Arena, GuardFreesNewerBlocks) {
+  memt::Arena arena;
+  void* a = arena.alloc(1);
+  size_t memoryUse = 0;
+  {
+    memt::Arena::Guard guard(arena);
+    // Two new blocks, not one: with one, the only block left empty is
+    // the front block, which is allowed. With two there is also an empty
+    // block behind it, which is not.
+    arena.alloc(arena.getMemoryUse() + 1);
+    arena.alloc(arena.getMemoryUse() + 1);
+    memoryUse = arena.getMemoryUse();
+  }
+  // the block in the middle is deallocated. As for freeAndAllAfter, the
+  // front block is kept, so not all of the memory is released.
+  ASSERT_LT(arena.getMemoryUse(), memoryUse);
+
+  {
+    memt::Arena::Guard guard(arena); // requires no empty block behind the front
+  }
+
+  arena.freeTop(a); // a is the only allocation that is still live
+  ASSERT_TRUE(arena.isEmpty());
+  ASSERT_EQ(arena.getAllocatedMemoryUse(), 0u);
+#ifdef MEMT_DEBUG
+  ASSERT_EQ(arena.debugAllocCount(), 0u);
+#endif
+}
