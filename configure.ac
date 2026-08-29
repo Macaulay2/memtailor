@@ -95,6 +95,24 @@ AS_IF([test "x$with_gtest" != "xno"],
 
 AM_CONDITIONAL([with_gtest], [test "x$with_gtest" != "xno"])
 
+dnl ----- The MEMT_DEBUG option
+
+AC_ARG_ENABLE([debug],
+    [AS_HELP_STRING([--enable-debug],
+        [turn on memtailor's internal consistency checks (MEMT_DEBUG).
+         This changes the ABI of the library, so it must match in every
+         translation unit that includes memtailor's headers
+         [default=no].])],,
+    [enable_debug=no])
+
+dnl Put MEMT_DEBUG in the Cflags of memtailor.pc as well, so that users
+dnl of pkg-config match the library automatically.
+AS_IF([test "x$enable_debug" != "xno"],
+    [MEMT_DEBUG_CFLAGS=-DMEMT_DEBUG
+     CPPFLAGS="$CPPFLAGS $MEMT_DEBUG_CFLAGS"],
+    [MEMT_DEBUG_CFLAGS=])
+AC_SUBST([MEMT_DEBUG_CFLAGS])
+
 CPPFLAGS="$CPPFLAGS -I$srcdir/src"
 AC_SUBST([CPPFLAGS])
 
