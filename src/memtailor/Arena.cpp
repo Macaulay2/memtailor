@@ -18,6 +18,9 @@ namespace memt {
     while (block().hasPreviousBlock())
       _blocks.freePreviousBlock();
     block().clear();
+#ifdef MEMT_DEBUG
+    _debugAllocs.clear();
+#endif
   }
 
   void Arena::freeAllAllocsAndBackingMemory() {

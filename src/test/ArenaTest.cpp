@@ -273,3 +273,36 @@ TEST(Arena, Guard) {
   ASSERT_TRUE(arena.fromArena(fromIteration3));
   arena.freeAndAllAfter(fromIteration3);
 }
+
+TEST(Arena, FreeAllAllocs) {
+  memt::Arena arena;
+  arena.alloc(1);
+  // allocate enough memory to force a new block of backing memory inside
+  // the arena, so that freeAllAllocs has a previous block to free.
+  arena.alloc(arena.getMemoryUse() + 1);
+  ASSERT_FALSE(arena.isEmpty());
+#ifdef MEMT_DEBUG
+  ASSERT_EQ(arena.debugAllocCount(), 2u);
+#endif
+
+  arena.freeAllAllocs();
+  ASSERT_TRUE(arena.isEmpty());
+#ifdef MEMT_DEBUG
+  ASSERT_EQ(arena.debugAllocCount(), 0u);
+#endif
+  memt::Arena::Guard guard(arena); // must be possible on an empty arena
+}
+
+TEST(Arena, GuardAfterEmptyRestore) {
+  memt::Arena arena;
+  {
+    // guard point for an empty arena; restoring to it uses freeAllAllocs
+    memt::Arena::Guard guard(arena);
+    arena.alloc(1);
+  }
+  ASSERT_TRUE(arena.isEmpty());
+#ifdef MEMT_DEBUG
+  ASSERT_EQ(arena.debugAllocCount(), 0u);
+#endif
+  memt::Arena::Guard guard2(arena); // must be possible on an empty arena
+}

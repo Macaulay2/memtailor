@@ -208,6 +208,13 @@ namespace memt {
     /** Returns true if there are no live allocations for this Arena. */
     inline bool isEmpty() const;
 
+#ifdef MEMT_DEBUG
+    /** Returns the number of live allocations according to the DEBUG-only
+        record of allocations. This is zero if and only if isEmpty() is
+        true. This method is useful for debugging and testing. */
+    size_t debugAllocCount() const {return _debugAllocs.size();}
+#endif
+
     /** Returns the total amount of memory allocated by this object. Includes
         excess capacity that has not been allocated by a client yet. Does NOT
         include memory for a DEBUG-only mechanism to catch bugs. */
