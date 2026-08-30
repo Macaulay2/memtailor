@@ -56,6 +56,8 @@ AC_PROG_INSTALL
 # Locate the C++ compiler.
 AC_PROG_CXX
 
+AX_CXX_COMPILE_STDCXX([17], [], [mandatory])
+
 # Set up LibTool
 LT_INIT([disable-shared])
 
@@ -77,7 +79,6 @@ AC_DEFUN([NO_GTEST_ERROR],
 
 AS_IF([test "x$with_gtest" != "xno"],
      [AC_LANG([C++])
-      AX_CXX_COMPILE_STDCXX([17], [], [mandatory])
       AC_CHECK_HEADER([gtest/gtest.h],
          [AC_MSG_CHECKING([for library containing testing::InitGoogleTest])
           SAVELIBS=$LIBS
