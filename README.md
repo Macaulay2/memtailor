@@ -21,6 +21,11 @@ standard, it will not cause a stack overflow, you can have multiple
 arena allocators at the same time and allocation is not tied to a
 function invocation.
 
+Requirements
+------------
+
+Memtailor requires C++17 or later.
+
 Debugging
 ---------
 
