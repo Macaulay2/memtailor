@@ -1,7 +1,3 @@
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-  add_compile_options(-DMEMT_DEBUG)
-endif()
-
 add_library(memtailor
   memtailor.h
   memtailor.cpp
@@ -15,14 +11,17 @@ add_library(memtailor
   memtailor/stdinc.h
   )
 
-target_link_libraries(memtailor Threads::Threads)
+add_library(memtailor::memtailor ALIAS memtailor)
+target_compile_features(memtailor PUBLIC cxx_std_17)
+# MEMT_DEBUG changes the public class layout, so consumers must inherit it.
+target_compile_definitions(memtailor PUBLIC $<BUILD_INTERFACE:$<$<CONFIG:Debug>:MEMT_DEBUG>>)
+target_link_libraries(memtailor PUBLIC Threads::Threads)
 
 target_include_directories(memtailor PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-  $<INSTALL_INTERFACE:include>
+  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
   )
 
-include(CTest)
 if(BUILD_TESTING)
   add_executable(memtailor-unit-tests
     test/ArenaTest.cpp

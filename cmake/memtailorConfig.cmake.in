@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(Threads)
+include("${CMAKE_CURRENT_LIST_DIR}/memtailorTargets.cmake")
+# Record the installed library's ABI, not the consumer's build configuration.
+if($<CONFIG:Debug>)
+  set_property(TARGET memtailor::memtailor APPEND PROPERTY
+    INTERFACE_COMPILE_DEFINITIONS MEMT_DEBUG)
+endif()
+check_required_components(memtailor)

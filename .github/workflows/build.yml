@@ -37,3 +37,27 @@ jobs:
                ninja
                src/memtailor-unit-tests
           fi
+      - name: Test installed CMake packages
+        if: matrix.build-system == 'cmake'
+        shell: bash
+        run: |
+          for shared in ON OFF; do
+            for config in Release Debug; do
+              build="$RUNNER_TEMP/memtailor-$shared-$config"
+              prefix="$build/install"
+              cmake -S . -B "$build" -GNinja \
+                -DCMAKE_BUILD_TYPE="$config" -DBUILD_SHARED_LIBS="$shared" \
+                -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX="$prefix" \
+                -DCMAKE_INSTALL_LIBDIR=lib64
+              cmake --build "$build" --target install
+              mv "$prefix" "$build/relocated"
+              expect_debug=OFF
+              if test "$config" = Debug; then expect_debug=ON; fi
+              cmake -S cmake/tests -B "$build/consumer" -GNinja \
+                -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=11 \
+                -DCMAKE_PREFIX_PATH="$build/relocated" \
+                -DEXPECT_MEMT_DEBUG="$expect_debug"
+              cmake --build "$build/consumer"
+              ctest --test-dir "$build/consumer" --output-on-failure
+            done
+          done
