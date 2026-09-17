@@ -47,8 +47,7 @@ jobs:
               prefix="$build/install"
               cmake -S . -B "$build" -GNinja \
                 -DCMAKE_BUILD_TYPE="$config" -DBUILD_SHARED_LIBS="$shared" \
-                -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX="$prefix" \
-                -DCMAKE_INSTALL_LIBDIR=lib64
+                -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX="$prefix"
               cmake --build "$build" --target install
               mv "$prefix" "$build/relocated"
               expect_debug=OFF
