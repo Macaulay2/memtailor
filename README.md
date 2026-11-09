@@ -44,7 +44,7 @@ The default library type remains static; `BUILD_SHARED_LIBS=ON` selects shared.
 Consumers can use the installed package:
 
 ```cmake
-find_package(memtailor 1.4 CONFIG REQUIRED)
+find_package(memtailor 1.5 CONFIG REQUIRED)
 target_link_libraries(my_program PRIVATE memtailor::memtailor)
 ```
 

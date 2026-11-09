@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.12)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(memtailor VERSION 1.4 LANGUAGES CXX)
+project(memtailor VERSION 1.5 LANGUAGES CXX)
 
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
@@ -24,9 +24,9 @@ add_compile_options(
 
 add_subdirectory(src)
 
-# Match the ABI version used by the Autotools build (libtool 0:4:0).
+# Match the ABI version used by the Autotools build
 set_target_properties(memtailor PROPERTIES
-  VERSION 0.0.4 SOVERSION 0 PUBLIC_HEADER src/memtailor.h)
+  VERSION 0.0.5 SOVERSION 0 PUBLIC_HEADER src/memtailor.h)
 
 install(TARGETS memtailor EXPORT memtailorTargets
   ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}

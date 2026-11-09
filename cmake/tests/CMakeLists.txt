@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(memtailor-consumer LANGUAGES CXX)
-find_package(memtailor 1.4 CONFIG REQUIRED)
+find_package(memtailor CONFIG REQUIRED)
 add_executable(consumer consumer.cpp)
 target_link_libraries(consumer PRIVATE memtailor::memtailor)
 if(EXPECT_MEMT_DEBUG)
