@@ -114,9 +114,6 @@ AS_IF([test "x$enable_debug" != "xno"],
     [MEMT_DEBUG_CFLAGS=])
 AC_SUBST([MEMT_DEBUG_CFLAGS])
 
-CPPFLAGS="$CPPFLAGS -I$srcdir/src"
-AC_SUBST([CPPFLAGS])
-
 dnl Set up AC_OUTPUT to create each file by copying an input file
 dnl while substituting the output variable values.
 AC_CONFIG_FILES([Makefile

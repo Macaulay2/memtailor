@@ -3,7 +3,7 @@
 ACLOCAL_AMFLAGS = -I build/autotools/m4
 
 # Options passed to the C PreProcessor (CPP), NOT the C Plus Plus compiler.
-AM_CPPFLAGS = -I${top_srcdir}/
+AM_CPPFLAGS = -I$(top_srcdir)/src
 
 # tell Libtool what the name of the library is.
 lib_LTLIBRARIES = libmemtailor.la
